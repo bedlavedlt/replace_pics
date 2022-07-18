@@ -57,8 +57,8 @@ class Application(Tk):
             # Image
             image = 0
             for i in range(image):
-                
-            self.image = PhotoImage(image)
+
+                self.image = PhotoImage(image)
 
         def previous_image(self):
             pass
