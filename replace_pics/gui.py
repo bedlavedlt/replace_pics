@@ -1,9 +1,10 @@
 from os.path import exists, abspath
 from tkinter import RIGHT, Tk, PhotoImage, TOP, BOTTOM, END, LEFT, Button
-from tkinter.ttk import Frame, Entry, Style
+from tkinter.ttk import Frame, Entry, Style, Label
 from tkinter.filedialog import askdirectory
 from turtle import bgcolor
 from PIL import Image, ImageTk
+from screeninfo import get_monitors
 
 
 class Application(Tk):
@@ -13,13 +14,16 @@ class Application(Tk):
         self.title("Replace Images")
         self.geometry("")
         self.minsize(500, 100)
-        self['bg'] = "#404040"
+        
+        #self['bg'] = "#404040"
 
-        self.skull = Image.open(abspath("sku11.png"))
+        self.minion = Image.open(abspath("./images/alison-wang-mou0S7ViElQ-unsplash.jpg"))
+        self.minion = ImageTk.PhotoImage(self.minion).resize(())
+        self.skull = Image.open(abspath("./images/sku11.png"))
         self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.ANTIALIAS))
-        self.right_arrow = Image.open(abspath("right_arrow_transparent.png"))
+        self.right_arrow = Image.open(abspath("./images/right_arrow_transparent.png"))
         self.right_arrow = ImageTk.PhotoImage(self.right_arrow)
-        self.left_arrow = Image.open(abspath("left_arrow_transparent.png"))
+        self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
         self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
         
         
@@ -44,7 +48,7 @@ class Application(Tk):
         self.directory_entry.pack(side=LEFT, fill='x', expand=True)
 
         # Select Directory Button
-        self.select_directory_button = Button(self.top_top_frame, text='Select Directory', command=self.select_directory)
+        self.select_directory_button = Button(self.top_top_frame, text='Select Directory', command=print(self.winfo_height))             #self.select_directory)
         self.select_directory_button.pack(side=RIGHT)
 
         # Buttons
@@ -62,7 +66,8 @@ class Application(Tk):
         self.replace_button.bind('<Enter>', self.button_black)
         self.replace_button.bind('<Leave>', self.button_neutral)
         
-        
+        self.image_to_replace = Label(self.bottom_frame, image=self.minion)
+        self.image_to_replace.pack()
 
 
     def button_black(self, event):
@@ -74,9 +79,9 @@ class Application(Tk):
 
     def select_directory(self):
             self.directory_path = askdirectory(title='Select Directory')
-            if exists(self.output_path):
-                self.output_entry.delete(0, END)
-                self.output_entry.insert(0, self.output_path)
+            if exists(self.directory_path):
+                self.directory_entry.delete(0, END)
+                self.directory_entry.insert(0, self.directory_path)
                 
     def next_image(self):
             # Image
