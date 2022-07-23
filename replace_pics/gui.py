@@ -1,10 +1,8 @@
 from os.path import exists, abspath
 from tkinter import RIGHT, Tk, PhotoImage, TOP, BOTTOM, END, LEFT, Button, BOTH
-from tkinter.ttk import Frame, Entry, Style, Label
+from tkinter.ttk import Frame, Entry, Label
 from tkinter.filedialog import askdirectory
-from turtle import bgcolor
 from PIL import Image, ImageTk
-from screeninfo import get_monitors
 
 
 class Application(Tk):
