@@ -1,5 +1,5 @@
 from os.path import exists, abspath
-from tkinter import RIGHT, Tk, PhotoImage, TOP, BOTTOM, END, LEFT, Button
+from tkinter import RIGHT, Tk, PhotoImage, TOP, BOTTOM, END, LEFT, Button, BOTH
 from tkinter.ttk import Frame, Entry, Style, Label
 from tkinter.filedialog import askdirectory
 from turtle import bgcolor
@@ -12,36 +12,35 @@ class Application(Tk):
     def __init__(self):
         super().__init__()
         self.title("Replace Images")
-        self.geometry("")
+        self.geometry("500x500")
         self.minsize(500, 100)
-        
         #self['bg'] = "#404040"
-
-        self.minion = Image.open(abspath("./images/alison-wang-mou0S7ViElQ-unsplash.jpg"))
-        self.minion = ImageTk.PhotoImage(self.minion).resize(())
+        self.minion = Image.open("./images/alison-wang-mou0S7ViElQ-unsplash.jpg")
+        #self.minion = self.minion.resize((500, 500), resample=Image.LANCZOS)
+        self.minion_photoimage = ImageTk.PhotoImage(self.minion)
         self.skull = Image.open(abspath("./images/sku11.png"))
-        self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.ANTIALIAS))
+        self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.LANCZOS))
         self.right_arrow = Image.open(abspath("./images/right_arrow_transparent.png"))
         self.right_arrow = ImageTk.PhotoImage(self.right_arrow)
         self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
         self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
         
-        
         # Top Frame
         self.top_frame = Frame(self, padding=10)
-        self.top_frame.pack(side=TOP, fill='x', expand=True, anchor='n')
+        self.top_frame.pack(side=TOP, fill='x', expand=False, anchor='n')
        
 
         # Top Top Frame
         self.top_top_frame = Frame(self.top_frame, padding=10)
-        self.top_top_frame.pack(side=TOP, fill=None, expand=False)
+        self.top_top_frame.pack(side=TOP, fill='x', expand=False)
         # Top Bottom Frame
         self.top_bottom_frame = Frame(self.top_frame, padding=10)
-        self.top_bottom_frame.pack(side=BOTTOM)
+        self.top_bottom_frame.pack(side=BOTTOM, fill=None, expand=False)
 
         # Bottom Frame
-        self.bottom_frame = Frame(self)
-        self.bottom_frame.pack(side=BOTTOM, fill='x', expand=True)
+        self.bottom_frame = Frame(self, borderwidth=2, relief='sunken')
+        self.bottom_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
+
 
         # Directory Text 
         self.directory_entry = Entry(self.top_top_frame, text='', width=75)
@@ -66,9 +65,35 @@ class Application(Tk):
         self.replace_button.bind('<Enter>', self.button_black)
         self.replace_button.bind('<Leave>', self.button_neutral)
         
-        self.image_to_replace = Label(self.bottom_frame, image=self.minion)
-        self.image_to_replace.pack()
+        self.left_image = Label(self.bottom_frame, image=self.minion_photoimage)
+        self.left_image.pack(side=LEFT)
 
+        self.right_image = Label(self.bottom_frame, image=self.minion_photoimage)
+        self.right_image.pack(side=RIGHT)
+        self.bottom_frame.bind("<Configure>", self._update_image_size_wrapper)
+
+        self._update_image_size()
+        self.should_update_image_size = True
+
+    def _update_image_size_wrapper(self, event):
+        if self.should_update_image_size == True:
+            self.should_update_image_size = False
+            self.after(500, self._update_image_size)
+            
+    
+    def _update_image_size(self):
+        self.bottom_frame.update()
+        
+        new_height = self.bottom_frame.winfo_height()
+        new_width = self.bottom_frame.winfo_width()/2.3
+        self.minion_photoimage= ImageTk.PhotoImage(self.minion.copy().resize((int(new_width), new_height), resample=Image.LANCZOS))
+        self.left_image = Label(self.bottom_frame, image=self.minion_photoimage)
+        self.left_image.pack(side=LEFT)
+        self.right_image = Label(self.bottom_frame, image=self.minion_photoimage)
+        self.right_image.pack(side=RIGHT)
+        self.should_update_image_size = True
+        pass
+        
 
     def button_black(self, event):
         self.replace_button.config(background='black')
