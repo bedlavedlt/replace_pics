@@ -24,18 +24,31 @@ class Application(Tk):
         self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
         self._make_frames()
     
+        # Replace Button
+        self.replace_button = Button(self.top_top_middle_frame, text="Replace", command=self.replace_image, cursor='pirate', activebackground='black', image=self.skull,  \
+                                        height=20, width=40, relief='flat', border=4)
+        self.replace_button.pack(side=BOTTOM)
+        self.replace_button.bind('<Enter>', self.button_black)
+        self.replace_button.bind('<Leave>', self.button_neutral)
 
-
-        # Directory Text 
-        self.directory_entry = Entry(self.top_top_frame, text='')
-        self.directory_entry.pack(side=LEFT, fill='x', expand=True)
+        # Replacement Files Directory 
+        self.replacement_entry = Entry(self.top_top_left_frame, text='')
+        self.replacement_entry.pack(side=TOP, fill='x', expand=True)
     
-        # Select Directory Button
-        self.select_directory_button = Button(self.top_top_frame, text='Select Directory', command=print(self.winfo_height))             #self.select_directory)
-        self.select_directory_button.pack(side=LEFT)
+        # Select Replacement Files Button
+        self.select_replacement_button = Button(self.top_top_left_frame, text='Replacements', command=print(self.winfo_height))             #self.select_directory)
+        self.select_replacement_button.pack(side=BOTTOM, pady=10)
+
+        # Original Files Directory
+        self.originals_entry = Entry(self.top_top_right_frame, text='')
+        self.originals_entry.pack(side=TOP, fill='x', expand=True)
+    
+        # Select Original Files Button
+        self.select_originals_button = Button(self.top_top_right_frame, text='Originals', command=print(self.winfo_height))             #self.select_directory)
+        self.select_originals_button.pack(side=BOTTOM, pady=10)
 
         # Buttons
-        self.next_button = Button(self.top_bottom_frame, text="Next", command=self.next_image, \
+        """self.next_button = Button(self.top_bottom_frame, text="Next", command=self.next_image, \
                                     relief='flat', border=0, image=self.right_arrow)
         self.next_button.pack(side=RIGHT)
 
@@ -47,11 +60,13 @@ class Application(Tk):
                                         height=20, width=40, relief='flat', border=4)
         self.replace_button.pack()
         self.replace_button.bind('<Enter>', self.button_black)
-        self.replace_button.bind('<Leave>', self.button_neutral)
+        self.replace_button.bind('<Leave>', self.button_neutral)"""
         
+        # Left Image
         self.left_image = Label(self.bottom_frame, image=self.minion_photoimage)
         self.left_image.pack(side=LEFT)
 
+        # Right Image
         self.right_image = Label(self.bottom_frame, image=self.minion_photoimage)
         self.right_image.pack(side=RIGHT)
         self.bottom_frame.bind("<Configure>", self._update_image_size_wrapper)
@@ -67,13 +82,23 @@ class Application(Tk):
        
         # Top Top Frame
         self.top_top_frame = Frame(self.top_frame, padding=10)
-        self.top_top_frame.pack(side=TOP, fill='x', expand=False)
+        self.top_top_frame.pack(side=TOP, fill='x', expand=True)
+
+        self.top_top_right_frame = Frame(self.top_top_frame, padding=10)
+        self.top_top_right_frame.pack(side=RIGHT, fill='x', expand=True)
+
+        self.top_top_left_frame = Frame(self.top_top_frame, padding=10)
+        self.top_top_left_frame.pack(side=LEFT, fill='x', expand=True)
+
+        self.top_top_middle_frame = Frame(self.top_top_frame, padding=10)
+        self.top_top_middle_frame.pack(side=BOTTOM, expand=False, fill='y')
+
         # Top Bottom Frame
         self.top_bottom_frame = Frame(self.top_frame, padding=10)
         self.top_bottom_frame.pack(side=BOTTOM, fill=None, expand=False)
 
         # Bottom Frame
-        self.bottom_frame = Frame(self, borderwidth=2, relief='sunken')
+        self.bottom_frame = Frame(self) #, borderwidth=2, relief='sunken')
         self.bottom_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
 
 
@@ -87,7 +112,7 @@ class Application(Tk):
         self.bottom_frame.update()
         
         new_height = self.bottom_frame.winfo_height()
-        new_width = self.bottom_frame.winfo_width()/2.3
+        new_width = self.bottom_frame.winfo_width()/2.1
         self.minion_photoimage= ImageTk.PhotoImage(self.minion.copy().resize((int(new_width), new_height), resample=Image.LANCZOS))
         self.left_image = Label(self.bottom_frame, image=self.minion_photoimage)
         self.left_image.pack(side=LEFT)
@@ -104,11 +129,11 @@ class Application(Tk):
         self.replace_button.config(background="#f0f0f0")
 
 
-    def select_directory(self):
-            self.directory_path = askdirectory(title='Select Directory')
-            if exists(self.directory_path):
-                self.directory_entry.delete(0, END)
-                self.directory_entry.insert(0, self.directory_path)
+    def select_replacement(self):
+            self.replacement_path = askdirectory(title='Select Folder of Replacements')
+            if exists(self.replacement_path):
+                self.replacement_entry.delete(0, END)
+                self.replacement_entry.insert(0, self.directory_path)
                 
     def next_image(self):
             # Image
