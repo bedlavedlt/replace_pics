@@ -22,31 +22,17 @@ class Application(Tk):
         self.right_arrow = ImageTk.PhotoImage(self.right_arrow)
         self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
         self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
-        
-        # Top Frame
-        self.top_frame = Frame(self, padding=10)
-        self.top_frame.pack(side=TOP, fill='x', expand=False, anchor='n')
-       
-
-        # Top Top Frame
-        self.top_top_frame = Frame(self.top_frame, padding=10)
-        self.top_top_frame.pack(side=TOP, fill='x', expand=False)
-        # Top Bottom Frame
-        self.top_bottom_frame = Frame(self.top_frame, padding=10)
-        self.top_bottom_frame.pack(side=BOTTOM, fill=None, expand=False)
-
-        # Bottom Frame
-        self.bottom_frame = Frame(self, borderwidth=2, relief='sunken')
-        self.bottom_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
+        self._make_frames()
+    
 
 
         # Directory Text 
-        self.directory_entry = Entry(self.top_top_frame, text='', width=75)
+        self.directory_entry = Entry(self.top_top_frame, text='')
         self.directory_entry.pack(side=LEFT, fill='x', expand=True)
-
+    
         # Select Directory Button
         self.select_directory_button = Button(self.top_top_frame, text='Select Directory', command=print(self.winfo_height))             #self.select_directory)
-        self.select_directory_button.pack(side=RIGHT)
+        self.select_directory_button.pack(side=LEFT)
 
         # Buttons
         self.next_button = Button(self.top_bottom_frame, text="Next", command=self.next_image, \
@@ -72,6 +58,24 @@ class Application(Tk):
 
         self._update_image_size()
         self.should_update_image_size = True
+
+
+    def _make_frames(self):
+        # Top Frame
+        self.top_frame = Frame(self, padding=10)
+        self.top_frame.pack(side=TOP, fill='x', expand=False, anchor='n')
+       
+        # Top Top Frame
+        self.top_top_frame = Frame(self.top_frame, padding=10)
+        self.top_top_frame.pack(side=TOP, fill='x', expand=False)
+        # Top Bottom Frame
+        self.top_bottom_frame = Frame(self.top_frame, padding=10)
+        self.top_bottom_frame.pack(side=BOTTOM, fill=None, expand=False)
+
+        # Bottom Frame
+        self.bottom_frame = Frame(self, borderwidth=2, relief='sunken')
+        self.bottom_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
+
 
     def _update_image_size_wrapper(self, event):
         if self.should_update_image_size == True:
