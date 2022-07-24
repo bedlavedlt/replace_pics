@@ -23,29 +23,16 @@ class Application(Tk):
         self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
         self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
         self._make_frames()
-    
-        # Replace Button
-        self.replace_button = Button(self.top_top_middle_frame, text="Replace", command=self.replace_image, cursor='pirate', activebackground='black', image=self.skull,  \
-                                        height=20, width=40, relief='flat', border=4)
-        self.replace_button.pack(side=BOTTOM)
-        self.replace_button.bind('<Enter>', self.button_black)
-        self.replace_button.bind('<Leave>', self.button_neutral)
+        self._place_widgets()
+        self._place_images()
+        # Fits images to frame
+        self._update_image_size()
 
-        # Replacement Files Directory 
-        self.replacement_entry = Entry(self.top_top_left_frame, text='')
-        self.replacement_entry.pack(side=TOP, fill='x', expand=True)
+        # Part of a delay loop. Prevents high-speed consecutive function calls
+        # when the window is being resized.
+        self.should_update_image_size = True
+        
     
-        # Select Replacement Files Button
-        self.select_replacement_button = Button(self.top_top_left_frame, text='Replacements', command=print(self.winfo_height))             #self.select_directory)
-        self.select_replacement_button.pack(side=BOTTOM, pady=10)
-
-        # Original Files Directory
-        self.originals_entry = Entry(self.top_top_right_frame, text='')
-        self.originals_entry.pack(side=TOP, fill='x', expand=True)
-    
-        # Select Original Files Button
-        self.select_originals_button = Button(self.top_top_right_frame, text='Originals', command=print(self.winfo_height))             #self.select_directory)
-        self.select_originals_button.pack(side=BOTTOM, pady=10)
 
         # Buttons
         """self.next_button = Button(self.top_bottom_frame, text="Next", command=self.next_image, \
@@ -61,7 +48,32 @@ class Application(Tk):
         self.replace_button.pack()
         self.replace_button.bind('<Enter>', self.button_black)
         self.replace_button.bind('<Leave>', self.button_neutral)"""
-        
+
+    def _place_widgets(self):
+        # Replace Button
+        self.replace_button = Button(self.top_top_middle_frame, text="Replace", command=self._replace_image, cursor='pirate', activebackground='black', image=self.skull,  \
+                                        height=20, width=40, relief='flat', border=4)
+        self.replace_button.pack(side=BOTTOM)
+        self.replace_button.bind('<Enter>', self.button_black)
+        self.replace_button.bind('<Leave>', self.button_neutral)
+
+        # Replacement Files Directory 
+        self.replacements_entry = Entry(self.top_top_left_frame, text='')
+        self.replacements_entry.pack(side=TOP, fill='x', expand=True)
+    
+        # Select Replacement Files Button
+        self.select_replacements_button = Button(self.top_top_left_frame, text='Replacements', command=self._select_replacements_dir)             #self.select_directory)
+        self.select_replacements_button.pack(side=BOTTOM, pady=10)
+
+        # Original Files Directory
+        self.originals_entry = Entry(self.top_top_right_frame, text='')
+        self.originals_entry.pack(side=TOP, fill='x', expand=True)
+    
+        # Select Original Files Button
+        self.select_originals_button = Button(self.top_top_right_frame, text='Originals', command=self._select_originals_dir)             #self.select_directory)
+        self.select_originals_button.pack(side=BOTTOM, pady=10)
+    
+    def _place_images(self):
         # Left Image
         self.left_image = Label(self.bottom_frame, image=self.minion_photoimage)
         self.left_image.pack(side=LEFT)
@@ -71,32 +83,29 @@ class Application(Tk):
         self.right_image.pack(side=RIGHT)
         self.bottom_frame.bind("<Configure>", self._update_image_size_wrapper)
 
-        self._update_image_size()
-        self.should_update_image_size = True
-
 
     def _make_frames(self):
         # Top Frame
         self.top_frame = Frame(self, padding=10)
         self.top_frame.pack(side=TOP, fill='x', expand=False, anchor='n')
-       
+        #--------------------------------------------------------------------
         # Top Top Frame
         self.top_top_frame = Frame(self.top_frame, padding=10)
         self.top_top_frame.pack(side=TOP, fill='x', expand=True)
-
+        # Top Top Right Frame
         self.top_top_right_frame = Frame(self.top_top_frame, padding=10)
         self.top_top_right_frame.pack(side=RIGHT, fill='x', expand=True)
-
+        # Top Top Left Frame
         self.top_top_left_frame = Frame(self.top_top_frame, padding=10)
         self.top_top_left_frame.pack(side=LEFT, fill='x', expand=True)
-
+        # Top Top Middle Frame
         self.top_top_middle_frame = Frame(self.top_top_frame, padding=10)
         self.top_top_middle_frame.pack(side=BOTTOM, expand=False, fill='y')
-
+        #--------------------------------------------------------------------
         # Top Bottom Frame
         self.top_bottom_frame = Frame(self.top_frame, padding=10)
         self.top_bottom_frame.pack(side=BOTTOM, fill=None, expand=False)
-
+        #--------------------------------------------------------------------
         # Bottom Frame
         self.bottom_frame = Frame(self) #, borderwidth=2, relief='sunken')
         self.bottom_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
@@ -110,7 +119,6 @@ class Application(Tk):
     
     def _update_image_size(self):
         self.bottom_frame.update()
-        
         new_height = self.bottom_frame.winfo_height()
         new_width = self.bottom_frame.winfo_width()/2.1
         self.minion_photoimage= ImageTk.PhotoImage(self.minion.copy().resize((int(new_width), new_height), resample=Image.LANCZOS))
@@ -122,24 +130,29 @@ class Application(Tk):
         pass
         
 
-    def button_black(self, event):
+    def _button_black(self, event):
         self.replace_button.config(background='black')
 
-    def button_neutral(self, event):
+    def _button_neutral(self, event):
         self.replace_button.config(background="#f0f0f0")
 
 
-    def select_replacement(self):
-            self.replacement_path = askdirectory(title='Select Folder of Replacements')
-            if exists(self.replacement_path):
-                self.replacement_entry.delete(0, END)
-                self.replacement_entry.insert(0, self.directory_path)
+    def select_replacements_dir(self):
+        self.replacements_path = askdirectory(title='Select Folder of Replacements')
+        if exists(self.replacements_path):
+            self.replacements_entry.delete(0, END)
+            self.replacements_entry.insert(0, self.replacements_path)
+
+    def select_originals_dir(self):
+        self.originals_path = askdirectory(title='Select Folder of Originals')
+        if exists(self.originals_path):
+            self.originals_entry.delete(0, END)
+            self.originals_entry.insert(0, self.originals_path)
                 
     def next_image(self):
             # Image
             image = 0
             for i in range(image):
-
                 self.image = PhotoImage(image)
 
     def previous_image(self):
