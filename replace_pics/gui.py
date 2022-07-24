@@ -46,23 +46,23 @@ class Application(Tk):
         self.replace_button = Button(self.top_bottom_frame, text="Replace", command=self.replace_image, cursor='pirate', activebackground='black', image=self.skull,  \
                                         height=20, width=40, relief='flat', border=4)
         self.replace_button.pack()
-        self.replace_button.bind('<Enter>', self.button_black)
-        self.replace_button.bind('<Leave>', self.button_neutral)"""
+        self.replace_button.bind('<Enter>', self._button_black)
+        self.replace_button.bind('<Leave>', self._button_neutral)"""
 
     def _place_widgets(self):
         # Replace Button
-        self.replace_button = Button(self.top_top_middle_frame, text="Replace", command=self._replace_image, cursor='pirate', activebackground='black', image=self.skull,  \
+        self.replace_button = Button(self.top_top_middle_frame, text="Replace", command=self.replace_image, cursor='pirate', activebackground='black', image=self.skull,  \
                                         height=20, width=40, relief='flat', border=4)
         self.replace_button.pack(side=BOTTOM)
-        self.replace_button.bind('<Enter>', self.button_black)
-        self.replace_button.bind('<Leave>', self.button_neutral)
+        self.replace_button.bind('<Enter>', self._button_black)
+        self.replace_button.bind('<Leave>', self._button_neutral)
 
         # Replacement Files Directory 
         self.replacements_entry = Entry(self.top_top_left_frame, text='')
         self.replacements_entry.pack(side=TOP, fill='x', expand=True)
     
         # Select Replacement Files Button
-        self.select_replacements_button = Button(self.top_top_left_frame, text='Replacements', command=self._select_replacements_dir)             #self.select_directory)
+        self.select_replacements_button = Button(self.top_top_left_frame, text='Replacements', command=self.select_replacements_dir)             #self.select_directory)
         self.select_replacements_button.pack(side=BOTTOM, pady=10)
 
         # Original Files Directory
@@ -70,7 +70,7 @@ class Application(Tk):
         self.originals_entry.pack(side=TOP, fill='x', expand=True)
     
         # Select Original Files Button
-        self.select_originals_button = Button(self.top_top_right_frame, text='Originals', command=self._select_originals_dir)             #self.select_directory)
+        self.select_originals_button = Button(self.top_top_right_frame, text='Originals', command=self.select_originals_dir)             #self.select_directory)
         self.select_originals_button.pack(side=BOTTOM, pady=10)
     
     def _place_images(self):
