@@ -13,15 +13,16 @@ class Application(Tk):
         self.geometry("500x500")
         self.minsize(500, 500)
         #self['bg'] = "#404040"
-        self._make_frames()
-        self._place_widgets()
-        self._load_images()
-        self._place_images()
-        self._update_image_size()
-
         # Part of a delay loop. Prevents high-speed consecutive function calls
         # when the window is being resized.
         self.should_update_image_size = True
+        self._make_frames()
+        self._load_images()
+        self._place_widgets()
+        self._place_images()
+        self._update_image_size()
+
+        
         
     
 
@@ -42,10 +43,10 @@ class Application(Tk):
 
     def _load_images(self):
         self.minion = Image.open("./images/alison-wang-mou0S7ViElQ-unsplash.jpg")
-        #self.minion = self.minion.resize((500, 500), resample=Image.LANCZOS)
+        #self.minion = self.minion.resize((500, 500), resample=Image.Resampling.LANCZOS)
         self.minion_photoimage = ImageTk.PhotoImage(self.minion)
         self.skull = Image.open(abspath("./images/sku11.png"))
-        self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.LANCZOS))
+        self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.Resampling.LANCZOS))
         self.right_arrow = Image.open(abspath("./images/right_arrow_transparent.png"))
         self.right_arrow = ImageTk.PhotoImage(self.right_arrow)
         self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
@@ -123,7 +124,7 @@ class Application(Tk):
         self.bottom_frame.update()
         new_height = self.bottom_frame.winfo_height()
         new_width = self.bottom_frame.winfo_width()/2.1
-        self.minion_photoimage= ImageTk.PhotoImage(self.minion.copy().resize((int(new_width), new_height), resample=Image.LANCZOS))
+        self.minion_photoimage= ImageTk.PhotoImage(self.minion.copy().resize((int(new_width), new_height), resample=Image.Resampling.LANCZOS))
         self.left_image = Label(self.bottom_frame, image=self.minion_photoimage)
         self.left_image.pack(side=LEFT)
         self.right_image = Label(self.bottom_frame, image=self.minion_photoimage)
