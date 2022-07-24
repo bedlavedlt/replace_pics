@@ -11,21 +11,12 @@ class Application(Tk):
         super().__init__()
         self.title("Replace Images")
         self.geometry("500x500")
-        self.minsize(500, 100)
+        self.minsize(500, 500)
         #self['bg'] = "#404040"
-        self.minion = Image.open("./images/alison-wang-mou0S7ViElQ-unsplash.jpg")
-        #self.minion = self.minion.resize((500, 500), resample=Image.LANCZOS)
-        self.minion_photoimage = ImageTk.PhotoImage(self.minion)
-        self.skull = Image.open(abspath("./images/sku11.png"))
-        self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.LANCZOS))
-        self.right_arrow = Image.open(abspath("./images/right_arrow_transparent.png"))
-        self.right_arrow = ImageTk.PhotoImage(self.right_arrow)
-        self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
-        self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
         self._make_frames()
         self._place_widgets()
+        self._load_images()
         self._place_images()
-        # Fits images to frame
         self._update_image_size()
 
         # Part of a delay loop. Prevents high-speed consecutive function calls
@@ -48,6 +39,17 @@ class Application(Tk):
         self.replace_button.pack()
         self.replace_button.bind('<Enter>', self.button_black)
         self.replace_button.bind('<Leave>', self.button_neutral)"""
+
+    def _load_images(self):
+        self.minion = Image.open("./images/alison-wang-mou0S7ViElQ-unsplash.jpg")
+        #self.minion = self.minion.resize((500, 500), resample=Image.LANCZOS)
+        self.minion_photoimage = ImageTk.PhotoImage(self.minion)
+        self.skull = Image.open(abspath("./images/sku11.png"))
+        self.skull = ImageTk.PhotoImage(self.skull.resize((20, 22), resample=Image.LANCZOS))
+        self.right_arrow = Image.open(abspath("./images/right_arrow_transparent.png"))
+        self.right_arrow = ImageTk.PhotoImage(self.right_arrow)
+        self.left_arrow = Image.open(abspath("./images/left_arrow_transparent.png"))
+        self.left_arrow = ImageTk.PhotoImage(self.left_arrow)
 
     def _place_widgets(self):
         # Replace Button
@@ -150,10 +152,7 @@ class Application(Tk):
             self.originals_entry.insert(0, self.originals_path)
                 
     def next_image(self):
-            # Image
-            image = 0
-            for i in range(image):
-                self.image = PhotoImage(image)
+            pass
 
     def previous_image(self):
             pass
